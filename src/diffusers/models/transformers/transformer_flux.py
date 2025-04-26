@@ -110,6 +110,9 @@ class FluxTransformerBlock(nn.Module):
     ):
         super().__init__()
 
+        # 💡 ADD THIS LINE HERE
+        self._gradient_checkpointing_func = lambda block, *inputs: block(*inputs)
+
         self.norm1 = AdaLayerNormZero(dim)
         self.norm1_context = AdaLayerNormZero(dim)
 
@@ -126,6 +129,7 @@ class FluxTransformerBlock(nn.Module):
             qk_norm=qk_norm,
             eps=eps,
         )
+
 
         self.norm2 = nn.LayerNorm(dim, elementwise_affine=False, eps=1e-6)
         self.ff = FeedForward(dim=dim, dim_out=dim, activation_fn="gelu-approximate")
